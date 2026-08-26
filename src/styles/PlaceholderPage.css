@@ -1,0 +1,156 @@
+/* ==========================================================================
+   Placeholder & 404 Page Styles
+   ========================================================================== */
+
+.placeholder-page {
+  min-height: calc(100vh - var(--nav-height) - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+  position: relative;
+}
+
+.placeholder-glow {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.09) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.placeholder-card {
+  background: var(--pw-bg-card);
+  border: 1px solid var(--pw-border-light);
+  border-radius: var(--pw-radius-xl);
+  padding: 3.5rem 2.5rem;
+  max-width: 640px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: var(--pw-shadow-lg);
+}
+
+.placeholder-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: var(--pw-bg-surface);
+  border: 1px solid var(--pw-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pw-amber-light);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--pw-shadow-sm);
+}
+
+.placeholder-icon-box.blue {
+  color: var(--pw-blue-light);
+  border-color: var(--pw-border-blue);
+  background: var(--pw-blue-bg);
+}
+
+.placeholder-icon-box.amber {
+  color: var(--pw-amber-light);
+  border-color: var(--pw-border-glow);
+  background: var(--pw-amber-bg);
+}
+
+.placeholder-icon-box.emerald {
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+  background: var(--pw-emerald-bg);
+}
+
+.placeholder-icon-box.rose {
+  color: #fb7185;
+  border-color: rgba(244, 63, 94, 0.3);
+  background: var(--pw-rose-bg);
+}
+
+.placeholder-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.placeholder-desc {
+  font-size: 1.05rem;
+  color: var(--pw-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.placeholder-features-box {
+  background: var(--pw-bg-surface);
+  border: 1px solid var(--pw-border);
+  border-radius: var(--pw-radius-lg);
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.features-box-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--pw-text-dim);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.placeholder-features-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.placeholder-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.88rem;
+  color: var(--pw-text-secondary);
+}
+
+.feature-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pw-amber);
+  flex-shrink: 0;
+}
+
+.placeholder-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .placeholder-card {
+    padding: 2.5rem 1.5rem;
+  }
+  .placeholder-title {
+    font-size: 1.75rem;
+  }
+  .placeholder-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .placeholder-actions .pw-btn {
+    width: 100%;
+  }
+}

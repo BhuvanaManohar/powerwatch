@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { BoltIcon } from './Icons';
 import '../../styles/Footer.css';
 
@@ -9,14 +10,14 @@ export default function Footer({ onOpenReport }) {
         <div className="footer-top-grid">
           {/* Brand Info */}
           <div className="footer-brand-col">
-            <a href="#" className="brand-link">
+            <Link to="/" className="brand-link">
               <div className="brand-icon-box">
                 <BoltIcon size={20} />
               </div>
               <div className="brand-name">
                 Power<span className="brand-accent">Watch</span>
               </div>
-            </a>
+            </Link>
             <p className="footer-desc">
               Next-generation civic power outage monitoring platform connecting communities and grid engineers for transparent restoration.
             </p>
@@ -30,11 +31,11 @@ export default function Footer({ onOpenReport }) {
           <div>
             <h4 className="footer-col-title">Platform</h4>
             <ul className="footer-links-list">
-              <li><a href="#home" className="footer-link">Home Overview</a></li>
-              <li><a href="#live-map" className="footer-link">Live Outage Map</a></li>
-              <li><a href="#how-it-works" className="footer-link">How It Works</a></li>
-              <li><a href="#department" className="footer-link">Department Bridge</a></li>
-              <li><a href="#stats" className="footer-link">City Grid Telemetry</a></li>
+              <li><Link to="/" className="footer-link">Home Overview</Link></li>
+              <li><Link to="/live-map" className="footer-link">Live Outage Map</Link></li>
+              <li><Link to="/citizen" className="footer-link">Citizen Dashboard</Link></li>
+              <li><Link to="/department" className="footer-link">Department Dashboard</Link></li>
+              <li><Link to="/login" className="footer-link">Login & Access</Link></li>
             </ul>
           </div>
 
@@ -52,10 +53,10 @@ export default function Footer({ onOpenReport }) {
                   Report a Power Cut
                 </button>
               </li>
-              <li><a href="#live-map" className="footer-link">Feeder Zone Lookup</a></li>
+              <li><Link to="/live-map" className="footer-link">Feeder Zone Lookup</Link></li>
+              <li><Link to="/citizen" className="footer-link">My Neighborhood Reports</Link></li>
+              <li><a href="#how-it-works" className="footer-link">How It Works</a></li>
               <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Electrical Safety Tips</a></li>
-              <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Storm Outage Prep</a></li>
-              <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Community Guidelines</a></li>
             </ul>
           </div>
 
@@ -63,10 +64,10 @@ export default function Footer({ onOpenReport }) {
           <div>
             <h4 className="footer-col-title">Grid Utilities</h4>
             <ul className="footer-links-list">
-              <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Control Room Portal</a></li>
-              <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Field Crew Dispatcher</a></li>
+              <li><Link to="/department" className="footer-link">Control Room Portal</Link></li>
+              <li><Link to="/department" className="footer-link">Field Crew Dispatcher</Link></li>
+              <li><Link to="/login" className="footer-link">Utility Staff Login</Link></li>
               <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Substation Telemetry Sync</a></li>
-              <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Civic API Specifications</a></li>
               <li><a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Incident Deduplication</a></li>
             </ul>
           </div>

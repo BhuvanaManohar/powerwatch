@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { BoltIcon, MenuIcon, XIcon, ChevronRightIcon } from './Icons';
 import '../../styles/Navbar.css';
 
-export default function Navbar({ onOpenReport, onOpenLogin, onOpenGetStarted }) {
+export default function Navbar({ onOpenReport, onOpenGetStarted }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -20,7 +21,7 @@ export default function Navbar({ onOpenReport, onOpenLogin, onOpenGetStarted }) 
     <header className={`pw-navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container nav-container">
         {/* Brand Logo */}
-        <a href="#" className="brand-link" aria-label="PowerWatch Home">
+        <Link to="/" className="brand-link" aria-label="PowerWatch Home">
           <div className="brand-icon-box">
             <BoltIcon size={22} />
           </div>
@@ -28,15 +29,35 @@ export default function Navbar({ onOpenReport, onOpenLogin, onOpenGetStarted }) 
             Power<span className="brand-accent">Watch</span>
             <span className="brand-tag">Civic Grid</span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Navigation Links */}
         <nav className="nav-menu" aria-label="Main Navigation">
-          <a href="#home" className="nav-item-link active">Home</a>
-          <a href="#live-map" className="nav-item-link">Live Map</a>
-          <a href="#how-it-works" className="nav-item-link">How It Works</a>
-          <a href="#department" className="nav-item-link">Department Bridge</a>
-          <a href="#about" className="nav-item-link">About</a>
+          <NavLink 
+            to="/" 
+            end 
+            className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
+          >
+            Home
+          </NavLink>
+          <NavLink 
+            to="/live-map" 
+            className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
+          >
+            Live Map
+          </NavLink>
+          <NavLink 
+            to="/citizen" 
+            className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
+          >
+            Citizen
+          </NavLink>
+          <NavLink 
+            to="/department" 
+            className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
+          >
+            Department
+          </NavLink>
         </nav>
 
         {/* Live System Status Indicator */}
@@ -47,13 +68,12 @@ export default function Navbar({ onOpenReport, onOpenLogin, onOpenGetStarted }) 
 
         {/* Action Buttons */}
         <div className="nav-actions">
-          <button 
-            type="button" 
+          <Link 
+            to="/login" 
             className="nav-btn-login"
-            onClick={onOpenLogin}
           >
             Login
-          </button>
+          </Link>
           <button 
             type="button" 
             className="pw-btn pw-btn-primary nav-btn-cta"
@@ -77,45 +97,45 @@ export default function Navbar({ onOpenReport, onOpenLogin, onOpenGetStarted }) 
       <div className={`mobile-menu-drawer ${mobileMenuOpen ? 'open' : ''}`}>
         <ul className="mobile-nav-links">
           <li>
-            <a href="#home" className="mobile-nav-link" onClick={closeMobileMenu}>
+            <Link to="/" className="mobile-nav-link" onClick={closeMobileMenu}>
               <span>Home</span>
               <ChevronRightIcon size={18} />
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#live-map" className="mobile-nav-link" onClick={closeMobileMenu}>
+            <Link to="/live-map" className="mobile-nav-link" onClick={closeMobileMenu}>
               <span>Live Map</span>
               <ChevronRightIcon size={18} />
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#how-it-works" className="mobile-nav-link" onClick={closeMobileMenu}>
-              <span>How It Works</span>
+            <Link to="/citizen" className="mobile-nav-link" onClick={closeMobileMenu}>
+              <span>Citizen Dashboard</span>
               <ChevronRightIcon size={18} />
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#department" className="mobile-nav-link" onClick={closeMobileMenu}>
-              <span>Department Bridge</span>
+            <Link to="/department" className="mobile-nav-link" onClick={closeMobileMenu}>
+              <span>Department Dashboard</span>
               <ChevronRightIcon size={18} />
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#about" className="mobile-nav-link" onClick={closeMobileMenu}>
-              <span>About PowerWatch</span>
+            <Link to="/login" className="mobile-nav-link" onClick={closeMobileMenu}>
+              <span>Login Portal</span>
               <ChevronRightIcon size={18} />
-            </a>
+            </Link>
           </li>
         </ul>
 
         <div className="mobile-actions">
-          <button 
-            type="button" 
+          <Link 
+            to="/login" 
             className="pw-btn pw-btn-secondary"
-            onClick={() => { closeMobileMenu(); onOpenLogin(); }}
+            onClick={closeMobileMenu}
           >
             Citizen / Staff Login
-          </button>
+          </Link>
           <button 
             type="button" 
             className="pw-btn pw-btn-primary"
