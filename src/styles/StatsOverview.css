@@ -1,0 +1,191 @@
+/* ==========================================================================
+   Stats & Core Features Overview Styles
+   ========================================================================== */
+
+.stats-section {
+  padding: 4.5rem 0;
+  background: linear-gradient(180deg, var(--pw-bg-dark) 0%, rgba(14, 20, 36, 0.6) 50%, var(--pw-bg-dark) 100%);
+  position: relative;
+}
+
+/* 4-Stat Metric Counter Grid */
+.stats-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.stat-card {
+  background: var(--pw-bg-card);
+  border: 1px solid var(--pw-border);
+  border-radius: var(--pw-radius-lg);
+  padding: 1.75rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--pw-transition-fast), border-color var(--pw-transition-fast);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.stat-card-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.stat-card.amber .stat-card-accent-bar {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.stat-card.blue .stat-card-accent-bar {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.stat-card.emerald .stat-card-accent-bar {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.stat-card.rose .stat-card-accent-bar {
+  background: linear-gradient(90deg, #f43f5e, #fb7185);
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.stat-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--pw-bg-surface);
+  border: 1px solid var(--pw-border);
+}
+
+.stat-card.amber .stat-icon-wrapper { color: var(--pw-amber-light); }
+.stat-card.blue .stat-icon-wrapper { color: var(--pw-blue-light); }
+.stat-card.emerald .stat-icon-wrapper { color: #34d399; }
+.stat-card.rose .stat-icon-wrapper { color: #fb7185; }
+
+.stat-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--pw-radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--pw-text-secondary);
+}
+
+.stat-value {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  font-family: var(--font-heading);
+  margin-bottom: 0.35rem;
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--pw-text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.stat-description {
+  font-size: 0.82rem;
+  color: var(--pw-text-muted);
+  line-height: 1.45;
+}
+
+/* Feature Pillars Grid */
+.features-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+.feature-pillar-card {
+  background: var(--pw-bg-surface);
+  border: 1px solid var(--pw-border);
+  border-radius: var(--pw-radius-lg);
+  padding: 2rem;
+  transition: all var(--pw-transition-base);
+}
+
+.feature-pillar-card:hover {
+  background: var(--pw-bg-card);
+  border-color: var(--pw-border-light);
+  box-shadow: var(--pw-shadow-md);
+}
+
+.pillar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--pw-bg-card);
+  border: 1px solid var(--pw-border-glow);
+  color: var(--pw-amber-light);
+  margin-bottom: 1.25rem;
+}
+
+.pillar-icon.blue {
+  border-color: var(--pw-border-blue);
+  color: var(--pw-blue-light);
+}
+
+.pillar-icon.emerald {
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.pillar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.pillar-desc {
+  font-size: 0.92rem;
+  color: var(--pw-text-secondary);
+  line-height: 1.6;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  .stats-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .features-pillars-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-metrics-grid {
+    grid-template-columns: 1fr;
+    margin-bottom: 3rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+}

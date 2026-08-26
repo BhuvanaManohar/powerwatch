@@ -1,0 +1,119 @@
+/* ==========================================================================
+   How PowerWatch Works - 4 Step Civic Flow
+   ========================================================================== */
+
+.how-it-works-section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+.steps-timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  position: relative;
+}
+
+.step-card {
+  background: var(--pw-bg-card);
+  border: 1px solid var(--pw-border);
+  border-radius: var(--pw-radius-lg);
+  padding: 2rem 1.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--pw-transition-base);
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--pw-border-glow);
+  box-shadow: var(--pw-shadow-glow);
+}
+
+.step-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.step-number-badge {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--pw-text-dim);
+  background: var(--pw-bg-surface);
+  border: 1px solid var(--pw-border);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-card:hover .step-number-badge {
+  color: var(--pw-amber-light);
+  border-color: var(--pw-border-glow);
+  background: var(--pw-amber-bg);
+}
+
+.step-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--pw-bg-surface);
+  border: 1px solid var(--pw-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pw-amber-light);
+}
+
+.step-card:nth-child(2) .step-icon-box { color: var(--pw-blue-light); }
+.step-card:nth-child(3) .step-icon-box { color: #f59e0b; }
+.step-card:nth-child(4) .step-icon-box { color: #34d399; }
+
+.step-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.step-desc {
+  font-size: 0.88rem;
+  color: var(--pw-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.step-highlight-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  background: var(--pw-bg-surface);
+  color: var(--pw-text-muted);
+  border: 1px solid var(--pw-border);
+  margin-top: auto;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  .steps-timeline-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .steps-timeline-grid {
+    grid-template-columns: 1fr;
+  }
+}

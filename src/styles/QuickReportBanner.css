@@ -1,0 +1,88 @@
+/* ==========================================================================
+   Quick Report Banner Styles
+   ========================================================================== */
+
+.quick-report-section {
+  padding: 4rem 0;
+  position: relative;
+}
+
+.quick-report-card {
+  background: radial-gradient(ellipse 100% 120% at 50% 0%, #1a2542 0%, #0e1424 100%);
+  border: 1px solid var(--pw-border-glow);
+  border-radius: var(--pw-radius-xl);
+  padding: 3.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--pw-shadow-lg), 0 0 50px rgba(245, 158, 11, 0.08);
+}
+
+.quick-report-glow {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.quick-report-content {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.quick-report-title {
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.quick-report-desc {
+  font-size: 1.05rem;
+  color: var(--pw-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.quick-report-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.quick-report-btn {
+  font-size: 1.02rem;
+  padding: 0.85rem 1.8rem;
+}
+
+.quick-notice-text {
+  font-size: 0.8rem;
+  color: var(--pw-text-dim);
+  margin-top: 1.75rem;
+}
+
+@media (max-width: 640px) {
+  .quick-report-card {
+    padding: 2.5rem 1.5rem;
+  }
+  .quick-report-title {
+    font-size: 1.75rem;
+  }
+  .quick-report-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .quick-report-btn {
+    width: 100%;
+  }
+}
