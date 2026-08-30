@@ -4,6 +4,7 @@ import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import ReportModal from './components/common/ReportModal';
 import Toast from './components/common/Toast';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -33,13 +34,11 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="app-wrapper">
-        {/* Navigation Bar with Router Integration */}
         <Navbar 
           onOpenReport={() => setIsReportModalOpen(true)}
           onOpenGetStarted={handleOpenGetStarted}
         />
 
-        {/* Dynamic Route Pages */}
         <main>
           <Routes>
             <Route 
@@ -52,25 +51,37 @@ export default function App() {
             />
             <Route path="/live-map" element={<LiveMapPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/citizen" element={<CitizenDashboardPage />} />
-            <Route path="/department" element={<DepartmentDashboardPage />} />
+            
+            {/* Protected Routes */}
+            <Route 
+              path="/citizen" 
+              element={
+                <ProtectedRoute allowedRoles={['citizen', 'department', 'admin']}>
+                  <CitizenDashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/department" 
+              element={
+                <ProtectedRoute allowedRoles={['department', 'admin']}>
+                  <DepartmentDashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
 
-        {/* Global Civic Footer */}
-        <Footer 
-          onOpenReport={() => setIsReportModalOpen(true)}
-        />
+        <Footer onOpenReport={() => setIsReportModalOpen(true)} />
 
-        {/* Global Interactive Report Modal */}
         <ReportModal 
           isOpen={isReportModalOpen}
           onClose={() => setIsReportModalOpen(false)}
           onReportSuccess={handleReportSuccess}
         />
 
-        {/* Global Toast Notification */}
         <Toast 
           toast={toast}
           onClose={() => setToast(null)}

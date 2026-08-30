@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { BoltIcon, MenuIcon, XIcon, ChevronRightIcon } from './Icons';
 import '../../styles/Navbar.css';
 
 export default function Navbar({ onOpenReport, onOpenGetStarted }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +19,12 @@ export default function Navbar({ onOpenReport, onOpenGetStarted }) {
   }, []);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+    closeMobileMenu();
+    navigate('/login');
+  };
 
   return (
     <header className={`pw-navbar ${isScrolled ? 'scrolled' : ''}`}>
@@ -33,31 +42,22 @@ export default function Navbar({ onOpenReport, onOpenGetStarted }) {
 
         {/* Desktop Navigation Links */}
         <nav className="nav-menu" aria-label="Main Navigation">
-          <NavLink 
-            to="/" 
-            end 
-            className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
-          >
+          <NavLink to="/" end className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}>
             Home
           </NavLink>
-          <NavLink 
-            to="/live-map" 
-            className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
-          >
+          <NavLink to="/live-map" className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}>
             Live Map
           </NavLink>
-          <NavLink 
-            to="/citizen" 
-            className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
-          >
-            Citizen
-          </NavLink>
-          <NavLink 
-            to="/department" 
-            className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
-          >
-            Department
-          </NavLink>
+          {user && (
+            <NavLink to="/citizen" className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}>
+              Citizen
+            </NavLink>
+          )}
+          {(profile?.role === 'department' || profile?.role === 'admin') && (
+            <NavLink to="/department" className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}>
+              Department
+            </NavLink>
+          )}
         </nav>
 
         {/* Live System Status Indicator */}
@@ -68,12 +68,26 @@ export default function Navbar({ onOpenReport, onOpenGetStarted }) {
 
         {/* Action Buttons */}
         <div className="nav-actions">
-          <Link 
-            to="/login" 
-            className="nav-btn-login"
-          >
-            Login
-          </Link>
+          {user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{ fontSize: '13px', fontWeight: '500' }}>
+                {profile?.full_name || user.email} ({profile?.role || 'user'})
+              </span>
+              <button 
+                type="button" 
+                onClick={handleSignOut}
+                className="nav-btn-login"
+                style={{ cursor: 'pointer' }}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="nav-btn-login">
+              Login
+            </Link>
+          )}
+
           <button 
             type="button" 
             className="pw-btn pw-btn-primary nav-btn-cta"
@@ -108,34 +122,38 @@ export default function Navbar({ onOpenReport, onOpenGetStarted }) {
               <ChevronRightIcon size={18} />
             </Link>
           </li>
-          <li>
-            <Link to="/citizen" className="mobile-nav-link" onClick={closeMobileMenu}>
-              <span>Citizen Dashboard</span>
-              <ChevronRightIcon size={18} />
-            </Link>
-          </li>
-          <li>
-            <Link to="/department" className="mobile-nav-link" onClick={closeMobileMenu}>
-              <span>Department Dashboard</span>
-              <ChevronRightIcon size={18} />
-            </Link>
-          </li>
-          <li>
-            <Link to="/login" className="mobile-nav-link" onClick={closeMobileMenu}>
-              <span>Login Portal</span>
-              <ChevronRightIcon size={18} />
-            </Link>
-          </li>
+          {user && (
+            <li>
+              <Link to="/citizen" className="mobile-nav-link" onClick={closeMobileMenu}>
+                <span>Citizen Dashboard</span>
+                <ChevronRightIcon size={18} />
+              </Link>
+            </li>
+          )}
+          {(profile?.role === 'department' || profile?.role === 'admin') && (
+            <li>
+              <Link to="/department" className="mobile-nav-link" onClick={closeMobileMenu}>
+                <span>Department Dashboard</span>
+                <ChevronRightIcon size={18} />
+              </Link>
+            </li>
+          )}
         </ul>
 
         <div className="mobile-actions">
-          <Link 
-            to="/login" 
-            className="pw-btn pw-btn-secondary"
-            onClick={closeMobileMenu}
-          >
-            Citizen / Staff Login
-          </Link>
+          {user ? (
+            <button 
+              type="button" 
+              className="pw-btn pw-btn-secondary"
+              onClick={handleSignOut}
+            >
+              Logout ({profile?.full_name || 'User'})
+            </button>
+          ) : (
+            <Link to="/login" className="pw-btn pw-btn-secondary" onClick={closeMobileMenu}>
+              Citizen / Staff Login
+            </Link>
+          )}
           <button 
             type="button" 
             className="pw-btn pw-btn-primary"
