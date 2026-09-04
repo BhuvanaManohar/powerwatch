@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../lib/supabaseClient';
+import { useAuth } from '../../AuthContext';
 import { 
   BoltIcon, 
   XIcon, 
@@ -25,37 +28,73 @@ const SECTORS = [
 ];
 
 export default function ReportModal({ isOpen, onClose, onReportSuccess }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [sector, setSector] = useState(SECTORS[0]);
   const [outageType, setOutageType] = useState('total');
   const [streetAddress, setStreetAddress] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [submittedTicket, setSubmittedTicket] = useState(null);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
+
+    // Require authentication before reporting
+    if (!user) {
+      onClose();
+      navigate('/login');
+      return;
+    }
+
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const ticketId = `PW-${Math.floor(1000 + Math.random() * 9000)}`;
+    try {
+      // Insert report record into Supabase public.reports table safely
+      const { data, error } = await supabase
+        .from('reports')
+        .insert([
+          {
+            user_id: user.id,
+            location_id: 1, // Linking to seeded Ward location
+            description: `[Sector: ${sector}] [Type: ${outageType.toUpperCase()}] ${streetAddress ? `Address: ${streetAddress} | ` : ''}${description}`,
+            status: 'submitted'
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Generate tracking reference from database ID
+      const ticketId = `PW-${data.id || Math.floor(1000 + Math.random() * 9000)}`;
+
       setSubmittedTicket({
         id: ticketId,
         sector,
         type: outageType
       });
-      setIsSubmitting(false);
+
       if (onReportSuccess) {
         onReportSuccess(ticketId);
       }
-    }, 600);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to submit report. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
     setSubmittedTicket(null);
     setStreetAddress('');
     setDescription('');
+    setErrorMsg('');
     onClose();
   };
 
@@ -104,6 +143,12 @@ export default function ReportModal({ isOpen, onClose, onReportSuccess }) {
             </div>
 
             <div className="modal-body">
+              {errorMsg && (
+                <div style={{ color: '#ef4444', backgroundColor: '#fef2f2', padding: '10px', borderRadius: '6px', marginBottom: '12px', fontSize: '14px' }}>
+                  {errorMsg}
+                </div>
+              )}
+
               {/* Sector Selection */}
               <div className="form-group">
                 <label className="form-label" htmlFor="sector-select">
