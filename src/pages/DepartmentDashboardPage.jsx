@@ -14,7 +14,6 @@ export default function DepartmentDashboardPage() {
     try {
       setLoading(true);
 
-      // 1. Fetch reports
       const { data: reportsData, error: reportsErr } = await supabase
         .from('reports')
         .select('*')
@@ -23,7 +22,6 @@ export default function DepartmentDashboardPage() {
       if (reportsErr) throw reportsErr;
       setReports(reportsData || []);
 
-      // 2. Fetch active incidents for linking options
       const { data: incidentsData, error: incidentsErr } = await supabase
         .from('incidents')
         .select('id, title, status')
@@ -50,8 +48,7 @@ export default function DepartmentDashboardPage() {
       const { error } = await supabase
         .from('reports')
         .update({ status: newStatus })
-        .eq('id', reportId)
-        .select();
+        .eq('id', reportId);
 
       if (error) throw error;
 
@@ -59,7 +56,7 @@ export default function DepartmentDashboardPage() {
         prev.map((r) => (r.id === reportId ? { ...r, status: newStatus } : r))
       );
     } catch (err) {
-      console.error('Failed to update status:', err.message, err.code, err.details);
+      console.error('Failed to update status:', err.message);
       alert(`Update failed: ${err.message}`);
     } finally {
       setUpdatingId(null);
@@ -75,7 +72,6 @@ export default function DepartmentDashboardPage() {
 
     setUpdatingId(reportId);
     try {
-      // Both target_report_id and target_incident_id are BIGINT numbers
       const { error } = await supabase.rpc('link_report_to_incident', {
         target_report_id: Number(reportId),
         target_incident_id: Number(targetIncidentId)
@@ -94,6 +90,33 @@ export default function DepartmentDashboardPage() {
     }
   };
 
+  const handleResolveIncident = async (incidentId) => {
+    if (!confirm('Are you sure power is fully restored for this incident zone?')) return;
+
+    try {
+      const { error } = await supabase.rpc('resolve_incident', {
+        target_incident_id: Number(incidentId)
+      });
+
+      if (error) throw error;
+
+      // Update local state for all linked reports
+      setReports((prev) =>
+        prev.map((r) => (r.incident_id === incidentId ? { ...r, status: 'resolved' } : r))
+      );
+      
+      // Update local state for incidents list
+      setIncidents((prev) =>
+        prev.map((inc) => (inc.id === incidentId ? { ...inc, status: 'resolved' } : inc))
+      );
+
+      alert('Incident marked as resolved. Map pins and citizen reports updated!');
+    } catch (err) {
+      console.error('Failed to resolve incident:', err.message);
+      alert(`Resolution failed: ${err.message}`);
+    }
+  };
+
   const getStatusBadge = (status) => {
     switch (status?.toLowerCase()) {
       case 'reviewed':
@@ -106,6 +129,12 @@ export default function DepartmentDashboardPage() {
         return (
           <span style={{ padding: '4px 8px', borderRadius: '4px', backgroundColor: '#8b5cf6', color: '#fff', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
             <MapPinIcon size={14} /> Linked to Map
+          </span>
+        );
+      case 'resolved':
+        return (
+          <span style={{ padding: '4px 8px', borderRadius: '4px', backgroundColor: '#10b981', color: '#fff', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <CheckCircleIcon size={14} /> Power Restored
           </span>
         );
       case 'rejected':
@@ -132,6 +161,40 @@ export default function DepartmentDashboardPage() {
           <p style={{ color: '#9ca3af' }}>Manage grid outages, assign field crews, and sync tickets to the Live Map.</p>
         </div>
       </header>
+
+      {/* Active Incidents Overview Bar */}
+      {incidents.length > 0 && (
+        <section style={{ backgroundColor: '#0f172a', padding: '16px 20px', borderRadius: '12px', marginBottom: '24px', border: '1px solid #334155' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px', color: '#38bdf8' }}>Active Map Incidents</h2>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            {incidents.map((inc) => (
+              <div key={inc.id} style={{ backgroundColor: '#1e293b', padding: '10px 14px', borderRadius: '8px', border: '1px solid #475569', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: '600' }}>{inc.title || `Incident #${inc.id}`}</div>
+                  <div style={{ fontSize: '11px', color: '#9ca3af' }}>Status: <b style={{ color: inc.status === 'resolved' ? '#10b981' : '#f59e0b' }}>{inc.status}</b></div>
+                </div>
+                {inc.status !== 'resolved' && (
+                  <button
+                    onClick={() => handleResolveIncident(inc.id)}
+                    style={{
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      backgroundColor: '#10b981',
+                      color: '#fff',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '11px',
+                      fontWeight: '600'
+                    }}
+                  >
+                    Resolve Incident
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {errorMsg && (
         <div style={{ color: '#ef4444', backgroundColor: '#fef2f215', border: '1px solid #ef4444', padding: '12px', borderRadius: '8px', marginBottom: '20px' }}>
@@ -173,7 +236,7 @@ export default function DepartmentDashboardPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                   <button
                     onClick={() => handleStatusChange(report.id, 'reviewed')}
-                    disabled={updatingId === report.id || report.status === 'reviewed'}
+                    disabled={updatingId === report.id || report.status === 'reviewed' || report.status === 'resolved'}
                     style={{
                       padding: '6px 12px',
                       borderRadius: '6px',
@@ -190,7 +253,7 @@ export default function DepartmentDashboardPage() {
 
                   <button
                     onClick={() => handleStatusChange(report.id, 'rejected')}
-                    disabled={updatingId === report.id || report.status === 'rejected'}
+                    disabled={updatingId === report.id || report.status === 'rejected' || report.status === 'resolved'}
                     style={{
                       padding: '6px 12px',
                       borderRadius: '6px',
@@ -205,13 +268,12 @@ export default function DepartmentDashboardPage() {
                     Reject
                   </button>
 
-                  {/* Incident Map Linking */}
                   {incidents.length > 0 && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginLeft: '8px' }}>
                       <select
                         value={selectedIncidents[report.id] || ''}
                         onChange={(e) => setSelectedIncidents({ ...selectedIncidents, [report.id]: e.target.value })}
-                        disabled={updatingId === report.id || report.status === 'linked'}
+                        disabled={updatingId === report.id || report.status === 'linked' || report.status === 'resolved'}
                         style={{
                           backgroundColor: '#0f172a',
                           color: '#fff',
@@ -231,7 +293,7 @@ export default function DepartmentDashboardPage() {
 
                       <button
                         onClick={() => handleLinkToIncident(report.id)}
-                        disabled={updatingId === report.id || report.status === 'linked' || !selectedIncidents[report.id]}
+                        disabled={updatingId === report.id || report.status === 'linked' || report.status === 'resolved' || !selectedIncidents[report.id]}
                         style={{
                           padding: '6px 12px',
                           borderRadius: '6px',
